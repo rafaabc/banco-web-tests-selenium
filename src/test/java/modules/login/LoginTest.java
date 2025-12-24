@@ -24,7 +24,7 @@ public class LoginTest {
     }
 
     @Test
-    @DisplayName("Create a transaction with valid data")
+    @DisplayName("Login with valid data")
     public void createATransactionWithValidData() {
         //Act
         driver.findElement(By.cssSelector("label[for='username']")).click();
@@ -38,6 +38,24 @@ public class LoginTest {
         //Assert
         String message = driver.findElement(By.xpath("(//h4)[2]")).getText();
         Assertions.assertEquals("Realizar Transferência", message);
+
+    }
+
+    @Test
+    @DisplayName("Login with invalid data")
+    public void createATransactionWithInvalidData() {
+        //Act
+        driver.findElement(By.cssSelector("label[for='username']")).click();
+        driver.findElement(By.id("username")).sendKeys("julio.lima");
+
+        driver.findElement(By.cssSelector("label[for='senha']")).click();
+        driver.findElement(By.id("senha")).sendKeys("654321");
+
+        driver.findElement(By.cssSelector(".btn.waves-effect.waves-light")).click();
+
+        //Assert
+        String message = driver.findElement(By.cssSelector(".toast.red")).getText();
+        Assertions.assertEquals("Erro no login. Tente novamente.", message);
 
     }
 
