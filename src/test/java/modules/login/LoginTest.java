@@ -1,6 +1,8 @@
 package modules.login;
 
+import config.Configuration;
 import io.github.bonigarcia.wdm.WebDriverManager;
+import org.aeonbits.owner.ConfigFactory;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -22,7 +24,9 @@ public class LoginTest {
         this.driver = new ChromeDriver(options);
         //this.driver.manage().window().maximize();
         this.driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-        this.driver.get("http://localhost:4000/");
+
+        Configuration configuration = ConfigFactory.create(Configuration.class);
+        this.driver.get(configuration.baseURL());
     }
 
     @Test
