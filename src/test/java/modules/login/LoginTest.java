@@ -1,12 +1,12 @@
 package modules.login;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import io.github.bonigarcia.wdm.WebDriverManager;
+import org.junit.jupiter.api.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 
 import java.time.Duration;
 
@@ -16,9 +16,11 @@ public class LoginTest {
 
     @BeforeEach
     void beforeEach() {
-        System.setProperty("webdrive.chrome.driver", "C:\\drivers\\chrome-win32\\chromedriver.exe");
-        this.driver = new ChromeDriver();
-        this.driver.manage().window().maximize();
+        WebDriverManager.chromedriver().setup();
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--headless=new");
+        this.driver = new ChromeDriver(options);
+        //this.driver.manage().window().maximize();
         this.driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
         this.driver.get("http://localhost:4000/");
     }
@@ -36,8 +38,9 @@ public class LoginTest {
         driver.findElement(By.cssSelector(".btn.waves-effect.waves-light")).click();
 
         //Assert
-        String message = driver.findElement(By.xpath("(//h4)[2]")).getText();
-        Assertions.assertEquals("Realizar Transferência", message);
+        WebElement labelToken = driver.findElement(By.cssSelector("label[for='token']"));
+        String message = labelToken.getAttribute("textContent");
+        Assertions.assertEquals("Token (Valores maiores que R$ 5.000,00)", message);
 
     }
 
@@ -57,6 +60,11 @@ public class LoginTest {
         String message = driver.findElement(By.cssSelector(".toast.red")).getText();
         Assertions.assertEquals("Erro no login. Tente novamente.", message);
 
+    }
+
+    @AfterEach
+    void afterEach() {
+        driver.quit();
     }
 
 
